@@ -1,10 +1,11 @@
 import * as THREE from '../../libs/three/three.module.js';
 import { OrbitControls } from '../../libs/three/jsm/OrbitControls.js';
 import { ARButton } from '../../libs/three/jsm/ARButton.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 class App{
 	constructor(){
-		const container = document.createElement( 'div' );
+        const container = document.createElement( 'div' );
         document.body.appendChild( container );
         document.body.style.background = '#050505';
 
@@ -33,8 +34,19 @@ class App{
         const geometry = new THREE.BoxGeometry(0.3,0.3,0.3);
         const material = new THREE.MeshStandardMaterial( { color: 0xFF0000 });
         this.mesh = new THREE.Mesh( geometry, material );
-        this.scene.add(this.mesh);
+        // this.scene.add(this.mesh);
         this.mesh.position.z = -1;
+
+        //Load maxiamo object
+        const loader = new GLTFLoader();
+        
+        loader.load('models/Soldier.glb', function ( gltf ) {
+
+            this.scene.add( gltf.scene );
+        });
+
+        // Controller
+        this.controller = this.renderer.xr.getController(0);
 
         document.body.appendChild( ARButton.createButton (this.renderer) );
         this.renderer.setAnimationLoop(this.render.bind(this));
