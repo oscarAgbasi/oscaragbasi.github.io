@@ -1,13 +1,12 @@
 import * as THREE from '../../libs/three/three.module.js';
 import { OrbitControls } from '../../libs/three/jsm/OrbitControls.js';
 import { ARButton } from '../../libs/three/jsm/ARButton.js';
-import { GLTFLoader } from '../../libs/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from '../../libs/three/jsm/GLTFLoader.js';
 
 class App{
 	constructor(){
         const container = document.createElement( 'div' );
         document.body.appendChild( container );
-        document.body.style.background = '#050505';
 
         //creating a scene
         this.scene = new THREE.Scene();
@@ -37,19 +36,9 @@ class App{
         //this.scene.add(this.mesh);
         this.mesh.position.z = -1;
 
-        //Load maxiamo object
-        const loader = new GLTFLoader();
-        
-        loader.load('models/Soldier.glb', function ( gltf ) {
-            const bbox = new THREE.Box3().setFromObject( gltf.scene );
-            console.log(`min:${vector2ToSttring(bbox.min, 2)} - max:${vector3ToSttring(bbox.max, 2)}`);
-            this.scene.add( gltf.scene );
-        }, function (err) {
-            console.log('Error while loading: ' + err);
-        });
-
+        this.loadGlft.bind(this);
         // Controller
-        this.controller = this.renderer.xr.getController(0);
+        //this.controller = this.renderer.xr.getController(0);
 
         document.body.appendChild( ARButton.createButton (this.renderer) );
         this.renderer.setAnimationLoop(this.render.bind(this));
@@ -60,13 +49,26 @@ class App{
 
     }
     
+    loadGlft() {
+        //Load maxiamo object
+        const loader = new GLTFLoader();
+        const self = this;
+        loader.load('models/Soldier.glb', function ( gltf ) {
+            //const bbox = new THREE.Box3().setFromObject( gltf.scene );
+            ///console.log(`min:${vector2ToSttring(bbox.min, 2)} - max:${vector3ToSttring(bbox.max, 2)}`);
+            console.dir(gltf);
+            self.scene.add( gltf.scene );
+        }, function (err) {
+            console.log('Error while loading: ' + err);
+        });
+    }
     resize(){
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize( window.innerWidth, window.innerHeight );  
     }
     
-	render( ) {
+	render() {
         this.mesh.rotateY( 0.01 );  
         this.renderer.render( this.scene, this.camera );
     }
