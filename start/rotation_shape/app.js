@@ -14,7 +14,7 @@ class App{
 
         //creating camera and seting the postion
         this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 100 );
-        //this.camera.position.set( 0, 0, 4 );       
+        this.camera.position.set( 0, 0, 4 );       
 
         //creating a renderer
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true } );
@@ -35,8 +35,7 @@ class App{
         this.mesh = new THREE.Mesh( geometry, material );
         //this.scene.add(this.mesh);
         this.mesh.position.z = -1;
-
-        this.loadGlft.bind(this);
+        this.loadGlft(this);
         // Controller
         //this.controller = this.renderer.xr.getController(0);
 
@@ -50,16 +49,15 @@ class App{
     }
     
     loadGlft() {
+        console.log('Inside function');
         //Load maxiamo object
         const loader = new GLTFLoader();
         const self = this;
         loader.load('models/Soldier.glb', function ( gltf ) {
-            //const bbox = new THREE.Box3().setFromObject( gltf.scene );
-            ///console.log(`min:${vector2ToSttring(bbox.min, 2)} - max:${vector3ToSttring(bbox.max, 2)}`);
-            console.dir(gltf);
+            // console.dir(gltf);
             self.scene.add( gltf.scene );
-        }, function (err) {
-            console.log('Error while loading: ' + err);
+        }, undefined, function (err) {
+           console.dir(err);
         });
     }
     resize(){
