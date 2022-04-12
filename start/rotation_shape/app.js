@@ -14,8 +14,8 @@ class App{
 
         //creating camera and seting the postion
         this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 100 );
-        this.camera.position.set( 0, 0, 4 );       
-
+        this.camera.position.set( 0, 0, 4 );
+        
         //creating a renderer
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true } );
         this.renderer.setPixelRatio( window.devicePixelRatio );
@@ -30,11 +30,11 @@ class App{
         this.scene.add(ambient);        
 
         //creating a geometry
-        const geometry = new THREE.BoxGeometry(0.3,0.3,0.3);
-        const material = new THREE.MeshStandardMaterial( { color: 0xFF0000 });
-        this.mesh = new THREE.Mesh( geometry, material );
-        //this.scene.add(this.mesh);
-        this.mesh.position.z = -1;
+        // const geometry = new THREE.BoxGeometry(0.3,0.3,0.3);
+        // const material = new THREE.MeshStandardMaterial( { color: 0xFF0000 });
+        // this.mesh = new THREE.Mesh( geometry, material );
+        // //this.scene.add(this.mesh);
+        // this.mesh.position.z = -1;
         this.loadGlft(this);
         // Controller
         //this.controller = this.renderer.xr.getController(0);
@@ -54,7 +54,8 @@ class App{
         const loader = new GLTFLoader();
         const self = this;
         loader.load('models/Soldier.glb', function ( gltf ) {
-            // console.dir(gltf);
+            var model = gltf.scene;
+            model.position.z = -4;
             self.scene.add( gltf.scene );
         }, undefined, function (err) {
            console.dir(err);
@@ -67,7 +68,7 @@ class App{
     }
     
 	render() {
-        this.mesh.rotateY( 0.01 );  
+        //this.mesh.rotateY( 0.01 );  
         this.renderer.render( this.scene, this.camera );
     }
 }
