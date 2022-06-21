@@ -53,10 +53,10 @@ class App{
         //Load maxiamo object
         const loader = new GLTFLoader();
         const self = this;
-        loader.load('models/Soldier.glb', function ( gltf ) {
+        loader.load('models/070_shake.glb', function ( gltf ) {
             var model = gltf.scene;
             model.position.z = -4;
-            self.scene.add( gltf.scene );
+            self.scene.add( model );
         }, undefined, function (err) {
            console.dir(err);
         });
