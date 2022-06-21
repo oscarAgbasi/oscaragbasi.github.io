@@ -10,6 +10,7 @@ class App{
 
         //creating a scene
         this.scene = new THREE.Scene();
+        this.clock = new THREE.Clock();
         //this.scene.background = new THREE.Color('#050505');
 
         //creating camera and seting the postion
@@ -54,7 +55,13 @@ class App{
         const loader = new GLTFLoader();
         const self = this;
         loader.load('models/070_shake.glb', function ( gltf ) {
-            var model = gltf.scene;
+            let model = gltf.scene;
+            let mixer = new THREE.AnimationMixer(model);
+            const animations = gltf.animations;
+            // Play a specific animation
+            const clip = THREE.AnimationClip.findByName( animations, "CubeAction" );
+            const action = mixer.clipAction( clip );
+            action.play();
             model.position.z = -4;
             self.scene.add( model );
         }, undefined, function (err) {
@@ -68,7 +75,7 @@ class App{
     }
     
 	render() {
-        //this.mesh.rotateY( 0.01 );  
+        this.clock.getDelta();
         this.renderer.render( this.scene, this.camera );
     }
 }
