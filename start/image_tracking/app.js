@@ -86,6 +86,9 @@ class App{
 				]
 		});
 
+		console.log('btn');
+		console.dir(btn);
+
 		this.renderer.setAnimationLoop( this.render.bind(this) );
 	}
 
