@@ -48,6 +48,51 @@ class App{
 		const imgBitmap = await createImageBitmap(self.img);
 
 		this.renderer.xr.addEventListener( 'sessionstart', async () => {
+			const session = this.renderer.xr.getSession();
+			console.log('session');
+			const scores = await session.getTrackedImageScores();
+			let trackableImages = 0;
+		
+			for ( let index = 0; index < scores.length; ++ index ) {
+		
+				if ( scores[ index ] == 'untrackable' ) {
+		
+					MarkImageUntrackable( index );
+		
+				} else {
+		
+					++ trackableImages;
+		
+				}
+		
+			}
+		
+			if ( trackableImages == 0 ) {
+		
+				WarnUser( "No trackable images" );
+		
+			}
+			
+		} );
+
+		// const button = ARButton.createButton(this.renderer, {
+		// 	requiredFeatures: [ 'image-tracking' ],
+		// 	trackedImages: [
+		// 		{
+		// 			image: imgBitmap,
+		// 			widthInMeters: 0.2
+		// 		}
+		// 	]
+		// 	 // notice a new required feature
+		// });
+        const button = ARButton.createButton(this.renderer, {
+			requiredFeatures: ["hit-test"] // notice a new required feature
+		  });
+		console.log('btn');
+		document.body.appendChild(button);
+		this.renderer.domElement.style.display = "none";
+
+		this.renderer.xr.addEventListener( 'sessionstart', async () => {
 
 			const session = this.renderer.xr.getSession();
 			console.log('session');
@@ -78,33 +123,47 @@ class App{
 			}
 			
 		} );
-
-		const button = ARButton.createButton(this.renderer, {
-			requiredFeatures: [ 'image-tracking' ],
-			trackedImages: [
-				{
-					image: imgBitmap,
-					widthInMeters: 0.2
-				}
-			]
-			 // notice a new required feature
-		});
-
-		console.log('btn');
-		document.body.appendChild(button);
-		this.renderer.domElement.style.display = "none";
-
 		this.renderer.setAnimationLoop( this.render.bind(this) );
 	}
 
 	resize(){
+		console.log('resize');
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize( window.innerWidth, window.innerHeight );  
     }
     
-	render( ) {   
-		const dt = this.clock.getDelta();
+	render( timestamp, frame ) {   
+		// const dt = this.clock.getDelta();
+		if ( frame ) {
+
+			const results = frame.getImageTrackingResults();
+			
+			for ( const result of results ) {
+			
+				// The result's index is the image's position in the trackedImages array specified at session creation
+				const imageIndex = result.index;
+	
+				// Get the pose of the image relative to a reference space.
+				const pose = frame.getPose( result.imageSpace, referenceSpace );
+	
+				const state = result.trackingState;
+	
+				if ( state == "tracked" ) {
+				
+					HighlightImage( imageIndex, pose );
+					
+				} else if ( state == "emulated" ) {
+				
+					FadeImage( imageIndex, pose );
+					
+				}
+				
+			}
+	
+		}
+	
+		this.renderer.render( this.scene, this.camera );	
 		
     }
 }
