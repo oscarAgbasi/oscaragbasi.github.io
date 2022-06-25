@@ -43,7 +43,7 @@ class App{
 		const self = this;
 
 		// Ensure the image is loaded and ready for use
-		self.img.src = './image/070_albumcover.jpg';
+		self.img.src = './image/070_albumcover.JPG';
 		console.log(self.img);
 		const imgBitmap = await createImageBitmap(self.img);
 
