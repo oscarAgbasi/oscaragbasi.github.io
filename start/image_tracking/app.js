@@ -75,19 +75,19 @@ class App{
 			
 		} );
 
-		// const button = ARButton.createButton(this.renderer, {
-		// 	requiredFeatures: [ 'image-tracking' ],
-		// 	trackedImages: [
-		// 		{
-		// 			image: imgBitmap,
-		// 			widthInMeters: 0.2
-		// 		}
-		// 	]
-		// 	 // notice a new required feature
-		// });
-        const button = ARButton.createButton(this.renderer, {
-			requiredFeatures: ["hit-test"] // notice a new required feature
-		  });
+		const button = ARButton.createButton(this.renderer, {
+			requiredFeatures: [ 'image-tracking' ],
+			trackedImages: [
+				{
+					image: imgBitmap,
+					widthInMeters: 0.2
+				}
+			]
+			 // notice a new required feature
+		});
+        // const button = ARButton.createButton(this.renderer, {
+		// 	requiredFeatures: ["hit-test"] // notice a new required feature
+		//   });
 		console.log('btn');
 		document.body.appendChild(button);
 		this.renderer.domElement.style.display = "none";
