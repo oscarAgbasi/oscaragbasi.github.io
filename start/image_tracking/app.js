@@ -1,9 +1,10 @@
 import * as THREE from '../../libs/three/three.module.js';
 import { OrbitControls } from '../../libs/three/jsm/OrbitControls.js';
-import { ARButton } from '../../libs/ARButton.js';
+import { ARButton } from "https://unpkg.com/three@0.126.0/examples/jsm/webxr/ARButton.js";
 
 class App{
 	constructor(){
+		console.log('const')
 		const container = document.createElement( 'div' );
 		const light = new THREE.DirectionalLight( 0xffffff );
 		document.body.appendChild( container );
@@ -30,12 +31,14 @@ class App{
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
         this.renderer.outputEncoding = THREE.sRGBEncoding;
 		
+		console.log('be4 setupXR');
 		this.setupXR();
 		container.appendChild( this.renderer.domElement );
         window.addEventListener('resize', this.resize.bind(this) );
 	}	
 	
 	async setupXR(){
+		console.log('inside XR');
 		this.renderer.xr.enabled = true;
 		const self = this;
 
@@ -76,18 +79,20 @@ class App{
 			
 		} );
 
-		const btn = new ARButton( this.renderer , { 
+		const button = ARButton.createButton(this.renderer, {
 			requiredFeatures: [ 'image-tracking' ],
-				trackedImages: [
-					{
-						image: imgBitmap,
-						widthInMeters: 0.2
-					}
-				]
+			trackedImages: [
+				{
+					image: imgBitmap,
+					widthInMeters: 0.2
+				}
+			]
+			 // notice a new required feature
 		});
 
 		console.log('btn');
-		alert(btn)
+		document.body.appendChild(button);
+		this.renderer.domElement.style.display = "none";
 
 		this.renderer.setAnimationLoop( this.render.bind(this) );
 	}
